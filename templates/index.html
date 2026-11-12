@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Подача форми: ввід</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="wrap">
+  <h1>Подача форми: пакетний ввід</h1>
+  <p class="sub">Одна ціль на рядок. На кожну ціль буде одна окрема відправка.</p>
+
+  {% if errors %}
+  <div class="errors">
+    <strong>Виправ:</strong>
+    <ul>{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul>
+  </div>
+  {% endif %}
+
+  <form class="card" method="post" action="{{ url_for('submit') }}"
+        enctype="multipart/form-data">
+    <label for="submission_type">Submission Type</label>
+    <select id="submission_type" name="submission_type">
+      {% for t in submission_types %}
+      <option value="{{ t }}" {% if form and form.submission_type == t %}selected{% endif %}>{{ t }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="targets">Цілі (по одній на рядок)</label>
+    <textarea id="targets" name="targets" placeholder="example.com&#10;example.net&#10;203.0.113.10">{{ form.targets if form }}</textarea>
+    <div class="hint">Дублі в межах одного пакета прибираються автоматично.</div>
+
+    <label for="threat_type">Threat Type</label>
+    <input type="text" id="threat_type" name="threat_type" value="{{ form.threat_type if form }}">
+
+    <label for="reason">Reason</label>
+    <textarea id="reason" name="reason">{{ form.reason if form }}</textarea>
+
+    <label for="evidence">Файл-доказ (jpg, jpeg, png або pdf, до 2 МБ)</label>
+    <input type="file" id="evidence" name="evidence" accept=".jpg,.jpeg,.png,.pdf">
+
+    <div class="row-actions">
+      <button type="submit">Створити пакет</button>
+    </div>
+  </form>
+
+  <div class="note">
+    Капча і фінальна відправка форми робляться людиною у вікні браузера на кроці
+    обробки. Тул заповнює поля і фіксує результат, але капчу не обходить.
+  </div>
+</div>
+</body>
+</html>

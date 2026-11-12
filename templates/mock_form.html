@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Макет форми (локальний тест)</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="wrap">
+  <h1>Макет форми</h1>
+  <p class="sub">Локальна форма для перевірки тули без реального сервера.
+    Поля збігаються з селекторами у config. Капчу вводить людина.</p>
+  <form class="card" method="post" action="{{ url_for('mock_form_submit') }}">
+    <label>Submission Type</label>
+    <select name="submission_type">
+      <option>Domain</option><option>IP</option><option>URL</option>
+    </select>
+    <label>Target</label>
+    <input type="text" name="target">
+    <label>Threat Type</label>
+    <input type="text" name="threat_type">
+    <label>Reason</label>
+    <textarea name="reason"></textarea>
+    <label>Evidence</label>
+    <input type="file" name="evidence">
+    <label>Капча (введи будь-що, імітує людину)</label>
+    <input type="text" name="captcha">
+    <div class="row-actions"><button type="submit">Submit</button></div>
+  </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Макет форми: результат</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    {% if code %}
+      <p>Відправлено. Код підтвердження:</p>
+      <p class="confirmation-code code" style="font-size:20px">{{ code }}</p>
+    {% else %}
+      <p class="form-error">{{ error }}</p>
+    {% endif %}
+  </div>
+</div>
+</body>
+</html>

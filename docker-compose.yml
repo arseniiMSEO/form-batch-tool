@@ -1,0 +1,14 @@
+services:
+  app:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      # У контейнері немає видимого вікна для капчі, тож тут лише інтерфейс і макет.
+      # .env не потрібен: FORM_URL заданий тут, решта має дефолти в config.py.
+      - FORM_URL=http://127.0.0.1:5000/mock-form
+      # Без 0.0.0.0 Flask у контейнері слухав би лише свій loopback, і проброс
+      # порту 5000:5000 був би недоступний з хоста (connection refused).
+      - HOST=0.0.0.0
+    volumes:
+      - ./data:/app/data

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Результат пакета {{ batch_id }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  {% if running %}<meta http-equiv="refresh" content="5">{% endif %}
+</head>
+<body>
+<div class="wrap">
+  <h1>Пакет {{ batch_id }}</h1>
+  <p class="sub">
+    Усього рядків: {{ jobs|length }}.
+    {% if running %}Обробка триває, сторінка оновлюється сама.{% endif %}
+  </p>
+
+  <div class="card">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Ціль</th><th>Статус</th><th>Код / причина</th><th>Спроб</th></tr>
+      </thead>
+      <tbody>
+        {% for j in jobs %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ j.target }}</td>
+          <td class="status {{ j.status }}">{{ j.status }}</td>
+          <td>
+            {% if j.confirmation_code %}<span class="code">{{ j.confirmation_code }}</span>
+            {% elif j.error %}{{ j.error }}
+            {% else %}-{% endif %}
+          </td>
+          <td>{{ j.attempts }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="row-actions">
+    {% if not running %}
+    <form method="post" action="{{ url_for('process', batch_id=batch_id) }}">
+      <button type="submit">Почати обробку (відкриється браузер для капчі)</button>
+    </form>
+    <form method="post" action="{{ url_for('retry', batch_id=batch_id) }}">
+      <button type="submit" class="secondary">Повторити невдалі</button>
+    </form>
+    {% endif %}
+    <a class="btn secondary" href="{{ url_for('index') }}">Новий пакет</a>
+  </div>
+
+  <div class="note">
+    На кроці обробки для кожного рядка відкривається форма з уже заповненими
+    полями. Людина вирішує капчу і тисне Submit, тул зчитує код підтвердження
+    або помилку. Рядки зі статусом sent і sent_unverified повторно не
+    відправляються. sent_unverified означає, що форму подано, але код не
+    розпізнано (сира відповідь у колонці) - повтор тут заборонено, щоб не подати
+    скаргу двічі.
+  </div>
+</div>
+</body>
+</html>
